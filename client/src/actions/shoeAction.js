@@ -39,12 +39,31 @@ export const addShoe = (shoeData) => (dispatch) => {
         type: ADD_SHOE,
         payload: res.data,
       });
+      dispatch(getShoes());
     })
     .catch((err) => {
       console.log(err);
       dispatch({
         type: ENABLE_FLASH_MESSAGE,
         payload: { message: "Something Went wrong try again", type: "error" },
+      });
+    });
+};
+// Update Shoe
+export const updateShoe = (shoeData) => (dispatch) => {
+  axios
+    .patch(`${process.env.REACT_APP_API}/shoe`)
+    .then((res) => {
+      dispatch({
+        type: UPDATE_SHOE,
+        payload: res.data,
+      });
+      dispatch(getShoes());
+    })
+    .catch((err) => {
+      dispatch({
+        type: ENABLE_FLASH_MESSAGE,
+        payload: { message: "Error", type: "error" },
       });
     });
 };

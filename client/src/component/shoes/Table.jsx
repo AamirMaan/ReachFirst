@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Pagination from "../misc/Pagination";
+import { addShoe } from "../../actions/shoeAction";
 
-const Table = ({ data, handleDelete }) => {
+const Table = ({ data, handleDelete, AddShoe, updateShoe }) => {
   const [showForm, setShowForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [shoeData, setShoeData] = useState({
@@ -83,6 +84,38 @@ const Table = ({ data, handleDelete }) => {
   };
   const handleChange = (name) => (event) => {
     setShoeData({ ...shoeData, [name]: event.currentTarget.value });
+  };
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    showEditForm ? updateShoe(updateId, shoeData) : addShoe(shoeData);
+    setDefaultValue();
+  };
+  const setDefaultValue = () => {
+    setShoeData({
+      name: "",
+      shoe_type: "",
+      color: "",
+      price: "",
+      size: "",
+      stock: "",
+    });
+  };
+  // Edit Section
+  const handleEdit = (id) => {
+    setShowEditForm(true);
+    data.forEach((val) => {
+      if (val.id === id) {
+        setShoeData({
+          name: val.name,
+          shoe_type: val.shoe_type,
+          color: val.color,
+          price: val.price,
+          size: val.size,
+          stock: val.stock,
+        });
+        setUpdateId(val.id);
+      }
+    });
   };
   // Shoe Form
   const addShoeForm = () => (
@@ -183,32 +216,10 @@ const Table = ({ data, handleDelete }) => {
       {/* /.container-fluid */}
     </section>
   );
-  const handleSubmit = () => {
-    console.log(shoeData);
-  };
-
-  // Edit Section
-  const handleEdit = (id) => {
-    setShowEditForm(true);
-    data.forEach((val) => {
-      if (val.id === id) {
-        setShoeData({
-          name: val.name,
-          shoe_type: val.shoe_type,
-          color: val.color,
-          price: val.price,
-          size: val.size,
-          stock: val.stock,
-        });
-        setUpdateId(val.id);
-      }
-    });
-  };
 
   return (
     <>
-      {showForm || showEditForm ? addShoeForm() : null}
-      <div className="card-tools">
+      <div style={{ float: "right" }}>
         {showEditForm ? (
           <div className="input-group input-group-sm" style={{ width: 150 }}>
             <button
@@ -246,11 +257,17 @@ const Table = ({ data, handleDelete }) => {
           </div>
         )}
       </div>
+      <br />
+      <br />
+      <br />
+      {showForm || showEditForm ? addShoeForm() : null}
 
       <section className="content">
         <div className="container-fluid">
           {data.length < 1 ? (
-            <strong>Sorry! No matching record found!</strong>
+            <strong style={{ color: "#fff" }}>
+              Sorry! No matching record found!
+            </strong>
           ) : (
             <div className="card-body table-responsive p-0">
               <div className="row">

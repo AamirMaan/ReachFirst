@@ -25,6 +25,24 @@ export const getBelts = () => (dispatch) => {
       });
     });
 };
+// Update Belt
+export const updateBelt = (beltData) => (dispatch) => {
+  axios
+    .patch(`${process.env.REACT_APP_API}/belt`)
+    .then((res) => {
+      dispatch({
+        type: UPDATE_BELT,
+        payload: res.data,
+      });
+      dispatch(getBelts());
+    })
+    .catch((err) => {
+      dispatch({
+        type: ENABLE_FLASH_MESSAGE,
+        payload: { message: "Error", type: "error" },
+      });
+    });
+};
 // Add Belts
 export const addBelt = (beltData) => (dispatch) => {
   axios
@@ -39,6 +57,7 @@ export const addBelt = (beltData) => (dispatch) => {
         type: ADD_BELT,
         payload: res.data,
       });
+      dispatch(getBelts());
     })
     .catch((err) => {
       console.log(err);

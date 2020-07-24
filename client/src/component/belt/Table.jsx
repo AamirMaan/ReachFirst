@@ -1,7 +1,20 @@
 import React, { useState, useEffect } from "react";
 import Pagination from "../misc/Pagination";
+import { addBelt } from "../../actions/beltAction";
 
-const Table = ({ data, handleEdit, handleDelete }) => {
+const Table = ({ data, handleDelete, AddBelt, updateBelt }) => {
+  const [showForm, setShowForm] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [beltData, setBeltData] = useState({
+    name: "",
+    buckle_type: "",
+    color: "",
+    price: "",
+    size: "",
+    stock: "",
+  });
+  const [updateId, setUpdateId] = useState("");
+  const { name, buckle_type, color, price, size, stock } = beltData;
   const [allRecord, setAllRecord] = useState(data);
   const [currentPage, setCurrentPage] = useState(1);
   const [recordPerPage, setRecordPerPage] = useState(10);
@@ -69,13 +82,192 @@ const Table = ({ data, handleEdit, handleDelete }) => {
       setAllRecord(data);
     }
   };
+  const handleChange = (name) => (event) => {
+    setBeltData({ ...beltData, [name]: event.currentTarget.value });
+  };
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    showEditForm ? updateBelt(updateId, beltData) : AddBelt(beltData);
+    setDefaultValue();
+  };
+  const setDefaultValue = () => {
+    setBeltData({
+      name: "",
+      buckle_type: "",
+      color: "",
+      price: "",
+      size: "",
+      stock: "",
+    });
+  };
+  // Edit Section
+  const handleEdit = (id) => {
+    setShowEditForm(true);
+    data.forEach((val) => {
+      if (val.id === id) {
+        setBeltData({
+          name: val.name,
+          buckle_type: val.buckle_type,
+          color: val.color,
+          price: val.price,
+          size: val.size,
+          stock: val.stock,
+        });
+        setUpdateId(val.id);
+      }
+    });
+  };
+  // Belt Form
+  const addBeltForm = () => (
+    <section className="content">
+      <div className="container-fluid">
+        {/* general form elements */}
+        <div className="card card-primary">
+          <div className="card-header">
+            <h3 className="card-title">Belt Form</h3>
+          </div>
+          {/* /.card-header */}
+          {/* form start */}
+          <form role="form">
+            <div className="card-body">
+              <div className="row">
+                {/* left column */}
+                <div className="form-group col-md-4">
+                  <label>Name</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Name"
+                    value={name}
+                    onChange={handleChange("name")}
+                  />
+                </div>
+                <div className="form-group col-md-4">
+                  <label>Buckle Type</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Type"
+                    value={buckle_type}
+                    onChange={handleChange("buckle_type")}
+                  />
+                </div>
+
+                <div className="form-group col-md-4">
+                  <label>Colour</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Colour"
+                    value={color}
+                    onChange={handleChange("color")}
+                  />
+                </div>
+              </div>
+              <div className="row">
+                {/* left column */}
+                <div className="form-group col-md-4">
+                  <label>Price</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    placeholder="Price"
+                    value={price}
+                    onChange={handleChange("price")}
+                  />
+                </div>
+                <div className="form-group col-md-4">
+                  <label>Size</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    placeholder="Size"
+                    value={size}
+                    onChange={handleChange("size")}
+                  />
+                </div>
+
+                <div className="form-group col-md-4">
+                  <label>Stock</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    placeholder="Title"
+                    value={stock}
+                    onChange={handleChange("stock")}
+                  />
+                </div>
+              </div>
+            </div>
+            {/* /.card-body */}
+            <div className="card-footer">
+              <button
+                type="submit"
+                onClick={handleSubmit}
+                className="btn btn-success"
+              >
+                {showEditForm ? "Update Belt" : "Add Belt"}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      {/* /.container-fluid */}
+    </section>
+  );
 
   return (
     <>
+      <div style={{ float: "right" }}>
+        {showEditForm ? (
+          <div className="input-group input-group-sm" style={{ width: 150 }}>
+            <button
+              type="submit"
+              className="btn btn-block btn-primary"
+              onClick={() => {
+                setShowForm(false);
+                setShowEditForm(false);
+                setBeltData({
+                  title: "",
+                  classes: "",
+                  subjects: [],
+                });
+              }}
+            >
+              Hide Update Form
+            </button>
+          </div>
+        ) : (
+          <div className="input-group input-group-sm" style={{ width: 150 }}>
+            <button
+              type="submit"
+              className="btn btn-block btn-primary"
+              onClick={() => {
+                setBeltData({
+                  title: "",
+                  classes: "",
+                  subjects: [],
+                });
+                setShowForm(!showForm);
+              }}
+            >
+              {showForm ? "Hide Form" : "Add New Belt"}
+            </button>
+          </div>
+        )}
+      </div>
+      <br />
+      <br />
+      <br />
+      {showForm || showEditForm ? addBeltForm() : null}
+
       <section className="content">
         <div className="container-fluid">
           {data.length < 1 ? (
-            <strong>Sorry! No matching record found!</strong>
+            <strong style={{ color: "#fff" }}>
+              Sorry! No matching record found!
+            </strong>
           ) : (
             <div className="card-body table-responsive p-0">
               <div className="row">
@@ -120,7 +312,7 @@ const Table = ({ data, handleEdit, handleDelete }) => {
                               />
                             </th>
                             <th>
-                              Buckle Type
+                              Type
                               <i
                                 onClick={() => handleAscSorting("buckle_type")}
                                 className="fa fa-arrow-up fa-xs float-right"
