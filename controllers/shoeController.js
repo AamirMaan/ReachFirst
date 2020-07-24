@@ -60,3 +60,25 @@ exports.updateShoe = (req, res) => {
     message: "Update Shoe Controller",
   });
 };
+//Delete Shoe Controller
+exports.deleteShoe = (req, res) => {
+  conn.query(
+    `DELETE FROM ${tableName} WHERE id = ?`,
+    req.query.id,
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({
+          error: "Something went wrong, try again!",
+        });
+      }
+      if (result.affectedRows < 1) {
+        return res.status(404).json({
+          error: "Shoe not found!",
+        });
+      }
+      res.json({
+        message: "Shoe deleted Successfully",
+      });
+    }
+  );
+};

@@ -49,7 +49,7 @@ exports.getBelts = (req, res) => {
         });
       }
 
-      return res.json(belts);
+      res.json(belts);
     }
   );
 };
@@ -58,4 +58,27 @@ exports.updateBelt = (req, res) => {
   return res.json({
     message: "Update Belt Controller",
   });
+};
+
+//Delete Belt Controller
+exports.deleteBelt = (req, res) => {
+  conn.query(
+    `DELETE FROM ${tableName} WHERE id = ?`,
+    req.query.id,
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({
+          error: "Something went wrong, try again!",
+        });
+      }
+      if (result.affectedRows < 1) {
+        return res.status(404).json({
+          error: "Belt not found!",
+        });
+      }
+      res.json({
+        message: "Belt deleted Successfully",
+      });
+    }
+  );
 };

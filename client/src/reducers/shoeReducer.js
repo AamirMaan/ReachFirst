@@ -1,4 +1,9 @@
-import { GET_SHOES, ADD_SHOE, UPDATE_SHOE } from "../actions/types";
+import {
+  GET_SHOES,
+  ADD_SHOE,
+  UPDATE_SHOE,
+  DELETE_SHOE,
+} from "../actions/types";
 
 const initialState = {
   shoes: [],
@@ -20,6 +25,11 @@ const beltReducer = (state = initialState, { type, payload }) => {
         shoeLoading: false,
       };
     case UPDATE_SHOE:
+      return {
+        ...state,
+        shoeLoading: false,
+      };
+    case DELETE_SHOE:
       return {
         ...state,
         shoeLoading: false,

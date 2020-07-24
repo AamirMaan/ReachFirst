@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import Table from "./Table";
 import { useDispatch, useSelector } from "react-redux";
 
-import { getBelts } from "../../actions/beltAction";
+import { getBelts, deleteBelt } from "../../actions/beltAction";
 
 const Belt = () => {
   const dispatch = useDispatch();
@@ -17,8 +17,8 @@ const Belt = () => {
   };
 
   //Handle Delete
-  const handleDelete = () => {
-    console.log("Delete");
+  const handleDelete = (id) => {
+    dispatch(deleteBelt(id));
   };
 
   return (

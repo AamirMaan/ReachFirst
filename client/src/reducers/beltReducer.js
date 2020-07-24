@@ -1,4 +1,4 @@
-import { GET_BELT, ADD_BELT, UPDATE_BELT } from "../actions/types";
+import { GET_BELT, ADD_BELT, UPDATE_BELT, DELETE_BELT } from "../actions/types";
 
 const initialState = {
   belts: [],
@@ -20,6 +20,11 @@ const beltReducer = (state = initialState, { type, payload }) => {
         beltLoading: false,
       };
     case UPDATE_BELT:
+      return {
+        ...state,
+        beltLoading: false,
+      };
+    case DELETE_BELT:
       return {
         ...state,
         beltLoading: false,

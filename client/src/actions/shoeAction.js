@@ -5,6 +5,7 @@ import {
   ADD_SHOE,
   UPDATE_SHOE,
   ENABLE_FLASH_MESSAGE,
+  DELETE_SHOE,
 } from "./types";
 
 // Get Shoes
@@ -36,6 +37,29 @@ export const addShoe = (shoeData) => (dispatch) => {
 
       dispatch({
         type: ADD_SHOE,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      dispatch({
+        type: ENABLE_FLASH_MESSAGE,
+        payload: { message: "Something Went wrong try again", type: "error" },
+      });
+    });
+};
+// Delete Shoes
+export const deleteShoe = (id) => (dispatch) => {
+  axios
+    .delete(`${process.env.REACT_APP_API}/shoe?id=${id}`)
+    .then((res) => {
+      dispatch({
+        type: ENABLE_FLASH_MESSAGE,
+        payload: { message: res.data.message, type: "success" },
+      });
+      dispatch(getShoes());
+      dispatch({
+        type: DELETE_SHOE,
         payload: res.data,
       });
     })

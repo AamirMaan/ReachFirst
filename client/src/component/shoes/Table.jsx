@@ -1,7 +1,19 @@
 import React, { useState, useEffect } from "react";
 import Pagination from "../misc/Pagination";
 
-const Table = ({ data, handleEdit, handleDelete }) => {
+const Table = ({ data, handleDelete }) => {
+  const [showForm, setShowForm] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [shoeData, setShoeData] = useState({
+    name: "",
+    shoe_type: "",
+    color: "",
+    price: "",
+    size: "",
+    stock: "",
+  });
+  const [updateId, setUpdateId] = useState("");
+  const { name, shoe_type, color, price, size, stock } = shoeData;
   const [allRecord, setAllRecord] = useState(data);
   const [currentPage, setCurrentPage] = useState(1);
   const [recordPerPage, setRecordPerPage] = useState(10);
@@ -69,9 +81,172 @@ const Table = ({ data, handleEdit, handleDelete }) => {
       setAllRecord(data);
     }
   };
+  const handleChange = (name) => (event) => {
+    setShoeData({ ...shoeData, [name]: event.currentTarget.value });
+  };
+  // Shoe Form
+  const addShoeForm = () => (
+    <section className="content">
+      <div className="container-fluid">
+        {/* general form elements */}
+        <div className="card card-primary">
+          <div className="card-header">
+            <h3 className="card-title">Shoe Form</h3>
+          </div>
+          {/* /.card-header */}
+          {/* form start */}
+          <form role="form">
+            <div className="card-body">
+              <div className="row">
+                {/* left column */}
+                <div className="form-group col-md-4">
+                  <label>Name</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Name"
+                    value={name}
+                    onChange={handleChange("name")}
+                  />
+                </div>
+                <div className="form-group col-md-4">
+                  <label>Type</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Type"
+                    value={shoe_type}
+                    onChange={handleChange("shoe_type")}
+                  />
+                </div>
+
+                <div className="form-group col-md-4">
+                  <label>Colour</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Colour"
+                    value={color}
+                    onChange={handleChange("color")}
+                  />
+                </div>
+              </div>
+              <div className="row">
+                {/* left column */}
+                <div className="form-group col-md-4">
+                  <label>Price</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    placeholder="Price"
+                    value={price}
+                    onChange={handleChange("price")}
+                  />
+                </div>
+                <div className="form-group col-md-4">
+                  <label>Size</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    placeholder="Size"
+                    value={size}
+                    onChange={handleChange("size")}
+                  />
+                </div>
+
+                <div className="form-group col-md-4">
+                  <label>Stock</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    placeholder="Title"
+                    value={stock}
+                    onChange={handleChange("stock")}
+                  />
+                </div>
+              </div>
+            </div>
+            {/* /.card-body */}
+            <div className="card-footer">
+              <button
+                type="submit"
+                onClick={handleSubmit}
+                className="btn btn-success"
+              >
+                {showEditForm ? "Update Shoe" : "Add Shoe"}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      {/* /.container-fluid */}
+    </section>
+  );
+  const handleSubmit = () => {
+    console.log(shoeData);
+  };
+
+  // Edit Section
+  const handleEdit = (id) => {
+    setShowEditForm(true);
+    data.forEach((val) => {
+      if (val.id === id) {
+        setShoeData({
+          name: val.name,
+          shoe_type: val.shoe_type,
+          color: val.color,
+          price: val.price,
+          size: val.size,
+          stock: val.stock,
+        });
+        setUpdateId(val.id);
+      }
+    });
+  };
 
   return (
     <>
+      {showForm || showEditForm ? addShoeForm() : null}
+      <div className="card-tools">
+        {showEditForm ? (
+          <div className="input-group input-group-sm" style={{ width: 150 }}>
+            <button
+              type="submit"
+              className="btn btn-block btn-primary"
+              onClick={() => {
+                setShowForm(false);
+                setShowEditForm(false);
+                setShoeData({
+                  title: "",
+                  classes: "",
+                  subjects: [],
+                });
+              }}
+            >
+              Hide Update Form
+            </button>
+          </div>
+        ) : (
+          <div className="input-group input-group-sm" style={{ width: 150 }}>
+            <button
+              type="submit"
+              className="btn btn-block btn-primary"
+              onClick={() => {
+                setShoeData({
+                  title: "",
+                  classes: "",
+                  subjects: [],
+                });
+                setShowForm(!showForm);
+              }}
+            >
+              {showForm ? "Hide Form" : "Add New Shoe"}
+            </button>
+          </div>
+        )}
+      </div>
+
       <section className="content">
         <div className="container-fluid">
           {data.length < 1 ? (

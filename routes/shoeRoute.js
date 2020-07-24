@@ -6,10 +6,12 @@ const {
   getShoes,
   addShoe,
   updateShoe,
+  deleteShoe,
 } = require("../controllers/shoeController");
 
 router.get("/", getShoes);
 router.post("/", addShoe);
 router.patch("/", updateShoe);
+router.delete("/", deleteShoe);
 
 module.exports = router;
