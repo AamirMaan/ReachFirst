@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Pagination from "../misc/Pagination";
 import { addBelt } from "../../actions/beltAction";
 
-const Table = ({ data, handleDelete, AddBelt, updateBelt }) => {
+const Table = ({ data, handleDelete, AddBelt, UpdateBelt }) => {
   const [showForm, setShowForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [beltData, setBeltData] = useState({
@@ -87,7 +87,7 @@ const Table = ({ data, handleDelete, AddBelt, updateBelt }) => {
   };
   const handleSubmit = (event) => {
     event.preventDefault();
-    showEditForm ? updateBelt(updateId, beltData) : AddBelt(beltData);
+    showEditForm ? UpdateBelt(updateId, beltData) : AddBelt(beltData);
     setDefaultValue();
   };
   const setDefaultValue = () => {

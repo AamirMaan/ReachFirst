@@ -50,9 +50,9 @@ export const addShoe = (shoeData) => (dispatch) => {
     });
 };
 // Update Shoe
-export const updateShoe = (shoeData) => (dispatch) => {
+export const updateShoe = (id, shoeData) => (dispatch) => {
   axios
-    .patch(`${process.env.REACT_APP_API}/shoe`)
+    .patch(`${process.env.REACT_APP_API}/shoe?id=${id}`, shoeData)
     .then((res) => {
       dispatch({
         type: UPDATE_SHOE,

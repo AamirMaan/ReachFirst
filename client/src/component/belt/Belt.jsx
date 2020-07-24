@@ -37,7 +37,7 @@ const Belt = () => {
               data={belts}
               handleDelete={handleDelete}
               AddBelt={AddBelt}
-              updateBelt={updateBelt}
+              updateBelt={UpdateBelt}
             />
           )}
         </div>

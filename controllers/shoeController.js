@@ -54,11 +54,44 @@ exports.getShoes = (req, res) => {
     }
   );
 };
-//get shoes controller
+//update shoes controller
+
 exports.updateShoe = (req, res) => {
-  return res.json({
-    message: "Update Shoe Controller",
-  });
+  const { errors, isValid } = validateShoeInput(req.body);
+
+  //Check Validation
+  if (isValid.includes(false)) {
+    return res.status(400).json(errors);
+  }
+
+  const shoeFields = {
+    name: req.body.name,
+    shoe_type: req.body.shoe_type,
+    size: req.body.size,
+    color: req.body.color,
+    price: req.body.price,
+    stock: req.body.stock,
+  };
+  conn.query(
+    `UPDATE ${tableName} set ? WHERE id = ?`,
+    [shoeFields, req.query.id],
+    (err, section) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          error: "Something went wrong, try again!",
+        });
+      }
+      if (section.affectedRows < 1) {
+        return res.status(404).json({
+          error: "Shoe not found!",
+        });
+      }
+      res.json({
+        message: "Shoe Info Updated Successfully",
+      });
+    }
+  );
 };
 //Delete Shoe Controller
 exports.deleteShoe = (req, res) => {

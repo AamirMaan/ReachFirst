@@ -24,7 +24,7 @@ exports.addBelt = (req, res) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
-        error: "Error in saving shoe to database, try again.",
+        error: "Error in saving belt to database, try again.",
       });
     }
     res.json({
@@ -53,13 +53,46 @@ exports.getBelts = (req, res) => {
     }
   );
 };
-//get Belts controller
-exports.updateBelt = (req, res) => {
-  return res.json({
-    message: "Update Belt Controller",
-  });
-};
 
+//update belt controller
+
+exports.updateBelt = (req, res) => {
+  const { errors, isValid } = validateBeltInput(req.body);
+
+  //Check Validation
+  if (isValid.includes(false)) {
+    return res.status(400).json(errors);
+  }
+
+  const beltFields = {
+    name: req.body.name,
+    buckle_type: req.body.buckle_type,
+    size: req.body.size,
+    color: req.body.color,
+    price: req.body.price,
+    stock: req.body.stock,
+  };
+  conn.query(
+    `UPDATE ${tableName} set ? WHERE id = ?`,
+    [beltFields, req.query.id],
+    (err, section) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          error: "Something went wrong, try again!",
+        });
+      }
+      if (section.affectedRows < 1) {
+        return res.status(404).json({
+          error: "Belt not found!",
+        });
+      }
+      res.json({
+        message: "Belt Info Updated Successfully",
+      });
+    }
+  );
+};
 //Delete Belt Controller
 exports.deleteBelt = (req, res) => {
   conn.query(

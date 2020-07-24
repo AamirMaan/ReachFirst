@@ -26,9 +26,9 @@ export const getBelts = () => (dispatch) => {
     });
 };
 // Update Belt
-export const updateBelt = (beltData) => (dispatch) => {
+export const updateBelt = (id, beltData) => (dispatch) => {
   axios
-    .patch(`${process.env.REACT_APP_API}/belt`)
+    .patch(`${process.env.REACT_APP_API}/belt?id=${id}`, beltData)
     .then((res) => {
       dispatch({
         type: UPDATE_BELT,
